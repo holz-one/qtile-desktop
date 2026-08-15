@@ -5,6 +5,7 @@ echo "🚀 Starting Multi-Distro Qtile & Desktop Dependencies Installer..."
 
 # Core GUI, utilities, and audio stack available across Ubuntu, Kali, and DietPi
 CORE_APT_PACKAGES=(
+    "kitty"
     "python3-pip"
     "python3-venv"
     "python3-xcffib"
