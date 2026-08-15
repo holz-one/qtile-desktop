@@ -1,0 +1,137 @@
+/**
+ * Author : A. K. Holz (holz-one)
+ * Origonal Author : Aditya Shakya (adi1090x)
+ * Modified for : Centered Power Menu with Large Header Image (No Search Bar)
+ **/
+
+/*****----- Configuration -----*****/
+configuration {
+    show-icons:                 false;
+    drun-display-format:        "{name}";
+}
+
+/*****----- Global Properties (Red, White & Black) -----*****/
+* {
+    font:                       "JetBrains Mono Nerd Font 10";
+    background:                 #000000;
+    background-alt:             #121212;
+    background-mid:             #242424;
+    foreground:                 #FFFFFF;
+    selected:                   #FF0033;
+    active:                     #FF0033;
+    urgent:                     #E60000;
+}
+
+/*****----- Main Window (Centered Box) -----*****/
+window {
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      500px;      /* Expanded width for better image view */
+    x-offset:                   0px;
+    y-offset:                   0px;
+
+    enabled:                    true;
+    border:                     2px solid;
+    border-color:               @selected;
+    border-radius:              8px;
+    cursor:                     "default";
+    background-color:           @background;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                    true;
+    spacing:                    0px;
+    background-color:           transparent;
+    orientation:                vertical;
+    /* Removed "inputbar" so there is no search bar */
+    children:                   [ "header", "listbox" ];
+}
+
+/*****----- Image Banner / Header (No Search Inputs) -----*****/
+header {
+    enabled:                    true;
+    /* Top padding set to 280px to reveal a large area of the image */
+    padding:                    280px 0px 0px; 
+    background-color:           transparent;
+    background-image:           url("~/.config/qtile/wp/power.png", width);
+    orientation:                horizontal;
+}
+
+listbox {
+    spacing:                    10px;
+    padding:                    15px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "message", "listview" ];
+}
+
+/*****----- Listview (4 Power Options) -----*****/
+listview {
+    enabled:                    true;
+    columns:                    1;
+    lines:                      4;           /* Exactly 4 options */
+    cycle:                      true;
+    dynamic:                    true;
+    scrollbar:                  false;
+    layout:                     vertical;
+    reverse:                    false;
+    fixed-height:               true;
+    fixed-columns:              true;
+    
+    spacing:                    8px;
+    background-color:           transparent;
+    text-color:                 @foreground;
+    cursor:                     "default";
+}
+
+/*****----- Elements -----*****/
+element {
+    enabled:                    true;
+    spacing:                    10px;
+    padding:                    12px 16px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+    cursor:                     pointer;
+}
+
+element normal.normal {
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+}
+
+element selected.normal {
+    background-color:           @selected;
+    text-color:                 @foreground;
+}
+
+element-icon {
+    background-color:           transparent;
+    text-color:                 inherit;
+    size:                       0px;        
+}
+
+element-text {
+    background-color:           transparent;
+    text-color:                 inherit;
+    cursor:                     inherit;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+}
+
+/*****----- Message -----*****/
+message {
+    background-color:           transparent;
+}
+
+textbox {
+    padding:                    10px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+}

@@ -1,0 +1,184 @@
+/**
+ * Author: A. K. Holz 
+ * Github: @holz-one
+ * Rofi Theme File (Service Manager - Full Width Top Bar)
+ * Rofi Version: 1.7.3
+ **/
+
+/*****----- Global Properties (Red, White & Black) -----*****/
+* {
+    font:                       "JetBrains Mono Nerd Font 10";
+    background:                 #000000;
+    background-alt:             #121212;
+    background-mid:             #242424;
+    foreground:                 #FFFFFF;
+    selected:                   #FF0033;
+    active:                     #FF0033;
+    urgent:                     #E60000;
+}
+
+/*****----- Configuration -----*****/
+configuration {
+    show-icons:                 false;
+}
+
+/*****----- Main Window (Full Width Top Bar) -----*****/
+window {
+    transparency:               "real";
+    location:                   north;
+    anchor:                     north;
+    fullscreen:                 false;
+    width:                      100%;
+    height:                     300px;
+    x-offset:                   0px;
+    y-offset:                   0px;
+
+    enabled:                    true;
+    border-radius:              0px;
+    cursor:                     "default";
+    background-color:           @background;
+}
+
+/*****----- Main Box (Horizontal Split) -----*****/
+mainbox {
+    enabled:                    true;
+    spacing:                    0px;
+    background-color:           transparent;
+    orientation:                horizontal;
+    children:                   [ "left-panel", "listbox" ];
+}
+
+/*****----- Left Panel (Image + Search Box) -----*****/
+left-panel {
+    width:                      450px;
+    expand:                     false;
+    orientation:                vertical;
+    spacing:                    0px;
+    background-color:           transparent;
+    children:                   [ "inputbar" ];
+}
+
+inputbar {
+    enabled:                    true;
+    spacing:                    10px;
+    /* Pushes search inputs toward the bottom of the banner image */
+    padding:                    200px 20px 20px 20px;
+    background-color:           transparent;
+    background-image:           url("~/.config/qtile/wp/srvdev.png", width);
+    text-color:                 @foreground;
+    orientation:                horizontal;
+    children:                   [ "textbox-prompt-colon", "entry" ];
+}
+
+textbox-prompt-colon {
+    enabled:                    true;
+    expand:                     false;
+    str:                        "⚙";
+    padding:                    10px 14px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @selected;
+}
+
+entry {
+    enabled:                    true;
+    expand:                     true;
+    padding:                    10px 14px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+    cursor:                     text;
+    placeholder:                "Search or Toggle...";
+    placeholder-color:          #888888;
+}
+
+/*****----- Right Panel (Services List) -----*****/
+listbox {
+    expand:                     true;
+    spacing:                    10px;
+    padding:                    20px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "message", "listview" ];
+}
+
+listview {
+    enabled:                    true;
+    columns:                    2;
+    lines:                      5;
+    cycle:                      true;
+    dynamic:                    true;
+    scrollbar:                  false;
+    layout:                     vertical;
+    reverse:                    false;
+    fixed-height:               true;
+    fixed-columns:              true;
+    
+    spacing:                    8px;
+    background-color:           transparent;
+    text-color:                 @foreground;
+    cursor:                     "default";
+}
+
+/*****----- Elements -----*****/
+element {
+    enabled:                    true;
+    spacing:                    10px;
+    padding:                    10px 14px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+    cursor:                     pointer;
+}
+
+element normal.normal {
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+}
+
+element normal.urgent {
+    background-color:           @urgent;
+    text-color:                 @foreground;
+}
+
+element normal.active {
+    background-color:           @background-mid;
+    text-color:                 @selected;
+}
+
+element selected.normal {
+    background-color:           @selected;
+    text-color:                 @foreground;
+}
+
+element selected.urgent {
+    background-color:           @urgent;
+    text-color:                 @foreground;
+}
+
+element selected.active {
+    background-color:           @selected;
+    text-color:                 @foreground;
+}
+
+element-text {
+    background-color:           transparent;
+    text-color:                 inherit;
+    cursor:                     inherit;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+}
+
+/*****----- Message -----*****/
+message {
+    background-color:           transparent;
+}
+
+textbox {
+    padding:                    10px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+}
