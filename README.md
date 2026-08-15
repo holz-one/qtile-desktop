@@ -50,7 +50,7 @@ git clone git@github.com:holz-one/qtile-desktop.git ~/.config/qtile
 Or via HTTPS:
 
 ```bash
-git clone [https://github.com/holz-one/qtile-desktop.git](https://github.com/holz-one/qtile-desktop.git) ~/.config/qtile
+git clone https://github.com/holz-one/qtile-desktop.git ~/.config/qtile
 ```
 
 ### 2. Make Scripts Executable & Install Dependencies
