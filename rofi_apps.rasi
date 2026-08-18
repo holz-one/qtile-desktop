@@ -1,0 +1,165 @@
+/**
+ * Author: A. K. Holz
+ * Github: @holz-one
+ * 
+ * Rofi Theme File (Grid Layout with Big Icons & Overlay Text)
+ * Rofi Version: 1.7.3
+ **/
+
+/*****----- Configuration -----*****/
+configuration {
+    modi:                       "dmenu";
+    show-icons:                 true;
+}
+
+/*****----- Global Properties (Red, White & Black) -----*****/
+* {
+    font:                       "JetBrains Mono Nerd Font Bold 10";
+    bg:                         #000000;
+    bgalt:                      #121212;
+    bgmid:                      #242424;
+    fg:                         #FFFFFF;
+    selected:                   #FF0033;
+    active:                     #FF0033;
+    urgent:                     #E60000;
+}
+
+/*****----- Main Window -----*****/
+window {
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      950px;
+
+    enabled:                    true;
+    border:                     2px solid;
+    border-color:               @selected;
+    border-radius:              2px;
+    cursor:                     "default";
+    background-color:           @bg;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                    true;
+    spacing:                    15px;
+    padding:                    20px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "inputbar", "listbox" ];
+}
+
+listbox {
+    spacing:                    0px;
+    padding:                    0px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "listview" ];
+}
+
+/*****----- Inputbar -----*****/
+inputbar {
+    enabled:                    false;
+    spacing:                    10px;
+    padding:                    10px 15px;
+    border-radius:              8px;
+    background-color:           @bgalt;
+    text-color:                 @fg;
+    orientation:                horizontal;
+    children:                   [ "prompt", "entry" ];
+}
+
+prompt {
+    enabled:                    true;
+    padding:                    0px;
+    background-color:           transparent;
+    text-color:                 @selected;
+    font:                       "JetBrains Mono Nerd Font Bold 10";
+}
+
+entry {
+    enabled:                    true;
+    expand:                     true;
+    background-color:           transparent;
+    text-color:                 @fg;
+    cursor:                     text;
+    placeholder:                "Search...";
+    placeholder-color:          #888888;
+}
+
+/*****----- Listview Grid -----*****/
+listview {
+    enabled:                    true;
+    columns:                    4;
+    lines:                      2;
+    cycle:                      true;
+    dynamic:                    true;
+    scrollbar:                  false;
+    layout:                     vertical;
+    fixed-height:               true;
+    fixed-columns:              true;
+    
+    /* Reduced grid gap */
+    spacing:                    10px;
+    background-color:           transparent;
+    text-color:                 @fg;
+    cursor:                     "default";
+}
+
+/*****----- Elements (Tight Image Card) -----*****/
+element {
+    enabled:                    true;
+    orientation:                vertical;
+    spacing:                    0px;
+    padding:                    0px;
+    border-radius:              0px;
+    background-color:           @bgalt;
+    text-color:                 @fg;
+    cursor:                     pointer;
+    /* Locks element size to match the 210px height */
+    height:                     210px;
+    children:                   [ "element-icon", "element-text" ];
+}
+
+element normal.normal {
+    background-color:           @bgalt;
+    text-color:                 @fg;
+}
+
+element selected.normal {
+    background-color:           @selected;
+    text-color:                 @fg;
+}
+
+element-icon {
+    background-color:           transparent;
+    text-color:                 inherit;
+    /* Adjusted icon size to prevent image overflow */
+    size:                       210px;
+    cursor:                     inherit;
+    horizontal-align:           0.5;
+    vertical-align:             0.5;
+    border-radius:              0px;
+    /* Strips extra internal padding */
+    margin:                     0px;
+    padding:                    0px;
+    expand:                     true;
+}
+
+element-text {
+    background-color:           #000000CC;
+    text-color:                 #FFFFFF;
+    cursor:                     inherit;
+    vertical-align:             0.5;
+    horizontal-align:           0.5;
+    padding:                    4px 0px;
+    /* Pulls label up over the bottom edge */
+    margin:                     -24px 0px 0px 0px;
+    expand:                     false;
+}
+
+element-text selected {
+    background-color:           @selected;
+    text-color:                 #FFFFFF;
+}

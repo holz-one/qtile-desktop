@@ -83,6 +83,10 @@ sudo ./make_sudoer.sh
 | `XF86MonBrightnessDown` | `./brightness.sh down` | Decreases backlight (-5%) |
 
 More will eventually be added from my other systems.
+## Images
 
+All the images in ./wp have been generated with Google Gemini for rofi menus and wallpaper.  
+It has improved a lot compaired to CoPilot or ChatGPT.
+ 
 ## 📝 License
 Distributed under the MIT License. See LICENSE for details.

@@ -67,14 +67,16 @@ for item in "${SERVICES[@]}"; do
     if [[ "$SELECTION" == *"$service"* ]]; then
         if is_active "$service"; then
             if [[ "$service" == "docker.service" ]]; then
-                sudo systemctl stop docker.socket docker.service
+                sudo systemctl stop docker.service
+                sudo systemctl stop docker.socket
             else
                 sudo systemctl stop "$service"
             fi
             notify-send "Service Manager" "Stopped $name" -i process-stop
         else
             if [[ "$service" == "docker.service" ]]; then
-                sudo systemctl start docker.socket docker.service
+                sudo systemctl start docker.service
+                sudo systemctl start docker.socket
             else
                 sudo systemctl start "$service"
             fi

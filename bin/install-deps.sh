@@ -3,6 +3,7 @@ set -euo pipefail
 
 echo "🚀 Starting Multi-Distro Qtile & Desktop Dependencies Installer..."
 
+
 # Core GUI, CLI tools, utilities, and audio stack across Ubuntu, Kali, and DietPi
 CORE_APT_PACKAGES=(
     # Core Terminal & Shell
@@ -14,6 +15,11 @@ CORE_APT_PACKAGES=(
     "curl"
     "openssh-client"
     "procps"
+    "clamav" 
+    "clamav-daemon" 
+    "rkhunter"
+    "chkrootkit"
+    "playerctl"
     
     # Python & Build Headers
     "python3-pip"
@@ -34,6 +40,7 @@ CORE_APT_PACKAGES=(
     "libnotify-bin"
     "x11-xserver-utils"
     "papirus-icon-theme"
+    "i3lock"
     
     # PipeWire & WirePlumber Audio Stack
     "pipewire"
@@ -72,7 +79,7 @@ systemctl --user restart pipewire pipewire-pulse wireplumber || true
 
 # 4. Generate Sudoers Rules for Services
 # Uses $HOME instead of ~ to ensure proper path expansion inside quotes
-SUDO_SCRIPT="${HOME}/.config/qtile/make_sudoer.sh"
+SUDO_SCRIPT="${HOME}/.config/qtile/bin/make_sudoer.sh"
 
 if [ -f "$SUDO_SCRIPT" ]; then
     echo "🔑 Configuring passwordless systemctl permissions for installed services..."
@@ -104,10 +111,21 @@ echo "⚡ Installing UV package manager..."
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # 7. Run Interactive Git Configuration
-GIT_SETUP_SCRIPT="${HOME}/.config/qtile/setup-git.sh"
+GIT_SETUP_SCRIPT="${HOME}/.config/qtile/bin/setup-git.sh"
 if [ -f "$GIT_SETUP_SCRIPT" ]; then
     chmod +x "$GIT_SETUP_SCRIPT"
     "$GIT_SETUP_SCRIPT"
 fi
+
+# 8. ClamAV Update
+echo "📦 Updating Clam AV "
+sudo systemctl stop clamav-freshclam
+sudo freshclam
+sudo systemctl start clamav-freshclam
+
+# 9. RKHunter - update Rootkits and Backdoors data
+echo "📦 Updating RKHunker "
+sudo rkhunter --propupd          # Set baseline system properties
+sudo rkhunter --update           # Update rootkit signatures
 
 echo "✅ Installation complete across all detected packages!"

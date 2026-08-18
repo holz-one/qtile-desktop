@@ -15,6 +15,14 @@ from qtile_extras.widget.decorations import PowerLineDecoration
 from libqtile.config import ScratchPad, DropDown
 ##
 
+floating_layout = layout.Floating(
+    float_rules=[
+        *layout.Floating.default_float_rules,
+        # Float any window given the class 'scanner-float'
+        Match(wm_class="scanner-float"),
+    ]
+)
+
 @hook.subscribe.client_name_updated
 def force_floating_by_title(window):
     if window.name == "Floating Terminal" or window.name == "Volume Control":
@@ -35,91 +43,227 @@ def force_floating_by_title(window):
 
 
 mod = "mod4"
+alt = "mod1"  # Alt key
 terminal = "kitty"
+##############
+# Rofi menu  #
+# ============
+APPS = "rofi -show drun -theme ~/.config/qtile/apps.rasi"
+DOCKER = os.path.expanduser("~/.config/qtile/docker.sh")
+DEVSRV = os.path.expanduser("~/.config/qtile/devsrv.sh")
+SSH = "rofi -show ssh -theme ~/.config/qtile/ssh.rasi -terminal kitty"
+CLAMAV = os.path.expanduser("~/.config/qtile/scanner-avm.sh")
+APPIMAGE = os.path.expanduser("~/.config/qtile/appimage.sh")
+OLLAMA = os.path.expanduser("~/.config/qtile/ollama-ai.sh")
+POWER = os.path.expanduser("~/.config/qtile/powermenu.sh")
 
+ROFI_APPS = os.path.expanduser("~/.config/qtile/rofi_apps.sh")
+
+####################
+# Scripts launcher #
+# ==================
+SETTINGS = os.path.expanduser("~/.config/qtile/bin/settings.sh")
+FILES =  os.path.expanduser("~/.config/qtile/bin/files.sh")
+SOUND = os.path.expanduser("~/.config/qtile/bin/sound.sh")
+BRIGHT = os.path.expanduser("~/.config/qtile/bin/brightness.sh")
+SYSINFO = "kitty -T 'Floating Terminal' -e .config/qtile/bin/sysinfo.sh"
+HTOP = "kitty -T 'Floating Terminal' -e htop"
+####################
 keys = [
-    # --- Core i3 Keybindings Translated to Qtile ---
-    Key([mod, "shift"], "q", lazy.window.kill(), desc="kill focused window"),
-    Key([mod, "shift"], "space", lazy.window.toggle_floating(), desc="toggle tiling / floating"),
-    # Navigation
-    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    # ===============================================================
+    # ROFI MODE LAUNCHERS
+    # ===============================================================
+    # Current Default: Mod + d -> Standard Desktop App Launcher
+    # f10/box with arrow pointing to right bottom
+    #       on Microsoft Microsoft® Nano Transceiver v2.0 
+    # ===============================================================
+    Key([mod], "d", lazy.spawn(APPS), desc="Rofi Desktop Apps"),
+    # ===============================================================
+    # d based keys
+    # mod + shift + d -> Docker containers
+    Key([mod, "shift"], "d", lazy.spawn(DOCKER), 
+        desc="Launch Rofi Docker Manager"),
+    # Mod + control + d  -> Instantly launch service toggle
+    Key([mod, "control"], "d", lazy.spawn(DEVSRV), 
+        desc="Rofi Service Launcher"),
+    # Mod + Alt +d -> Instantly launch the custom AppImage Launcher
+    Key([mod, alt], "d", lazy.spawn(APPIMAGE), 
+        desc="Rofi AppImage Launcher"),
+    # ==============================================================
+    # s bases kays
+    # Mod + s -> SSH Session Launcher
+    Key([mod], "s", lazy.spawn(SSH), desc="Rofi SSH Launcher"),
+    # Mod + Shift + s
+    Key([mod, "shift"], "s", lazy.spawn(CLAMAV), 
+        desc="Run Rofi Malware Scanner"),
+
+    # ==============================================================
+    # Mod + o -> launch selected Ollama Model
+    Key([mod], "o", lazy.spawn(OLLAMA), 
+        desc="Rofi Ollama AI Launcher"),
+    # =============================================================
+    # Projector / Display Key: 
+    # MSI Katana projector shortcut is just a <win>+p on one button
+    # f9/2 sceen icon on Microsoft Microsoft® Nano Transceiver v2.0
+    # =============================================================
+    Key([mod], "p", lazy.spawn("arandr"), 
+        desc="arandr"),
+    # ===========================================================
+    # Quit
+    Key([mod, "shift"], "q", lazy.window.kill(), 
+        desc="kill focused window"),
+    # ==========================================================
+    Key([mod, "shift"], "space", lazy.window.toggle_floating(), 
+        desc="toggle tiling / floating"),
+    Key([mod], "space", lazy.layout.next(), 
+        desc="Move window focus to other window"),
+    # ===========================================================
+    # Window focus keys
     Key([mod], "Left", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "Right", lazy.layout.right(), desc="Move focus to right"),
+    Key([mod], "Right", lazy.layout.right(), 
+        desc="Move focus to right"),
     Key([mod], "Down", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "Up", lazy.layout.up(), desc="Move focus up"),
-    
+    # ===========================================================
     # Shuffling Windows
     Key([mod, "shift"], "Left", lazy.layout.shuffle_left()),
     Key([mod, "shift"], "Right", lazy.layout.shuffle_right()),
     Key([mod, "shift"], "Down", lazy.layout.shuffle_down()),
     Key([mod, "shift"], "Up", lazy.layout.shuffle_up()),
-
+    # ==========================================================
     # Window Resizing
     Key([mod, "control"], "Left", lazy.layout.grow_left()),
     Key([mod, "control"], "Right", lazy.layout.grow_right()),
     Key([mod, "control"], "Down", lazy.layout.grow_down()),
     Key([mod, "control"], "Up", lazy.layout.grow_up()),
     Key([mod], "n", lazy.layout.normalize()),
-
-    # Standard Shortcuts
+    # =========================================================
+    # Change Layout
     Key([mod], "Tab", lazy.next_layout()),
+    # =========================================================
+    # Full Screen
     Key([mod], "f", lazy.window.toggle_fullscreen()),
+    # =========================================================
+    # Reload Qtile Config
     Key([mod, "control"], "r", lazy.reload_config()),
+    # =========================================================
     # terminal
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "Return", lazy.spawn(terminal), 
+        desc="Launch terminal"),
+    # =========================================================
     # scratchpad
-    Key([mod], "Backspace", lazy.group["scratchpad"].dropdown_toggle("term"), desc="Toggle scratchpad terminal"),
-
-    # ===============================================================
-    # ROFI MODE LAUNCHERS
-    # ===============================================================
-# d
-    # Current Default: Mod + d -> Standard Desktop App Launcher
-    Key([mod], "d", lazy.spawn("rofi -show drun -theme ~/.config/qtile/apps.rasi"), desc="Rofi Desktop Apps"),
-
-    # Mod + Shift + d -> SSH Session Launcher
-    Key([mod, "shift"], "d", lazy.spawn("rofi -show ssh -theme ~/.config/qtile/ssh.rasi -terminal kitty"), desc="Rofi SSH Launcher"),
-
-#a
-    # Mod + a -> Instantly launch the custom AppImage Game Launcher
-    Key([mod], "a", lazy.spawn(os.path.expanduser("~/.config/qtile/appimage.sh")), 
-        desc="Rofi AppImage Launcher"),
-#g
-    # Mod + g -> Instantly launch service toggle
-    Key([mod], "g", lazy.spawn(os.path.expanduser("~/.config/qtile/devsrv.sh")), 
-        desc="Rofi Service Launcher"),
-    # more to come, just need to make a script
-
-
+    Key([mod], "Backspace", 
+        lazy.group["scratchpad"].dropdown_toggle("term"), 
+        desc="Toggle scratchpad terminal"),
     # ===============================================================
     # HARDWARE MEDIA & VOLUME KEYS
     # ===============================================================
-
     # Volume Up: Raises audio by 5% (Clamped at 100% max)
-    Key([], "XF86AudioRaiseVolume", lazy.spawn(os.path.expanduser("~/.config/qtile/sound.sh up")), desc="Raise Volume"),
-
+    Key([], "XF86AudioRaiseVolume", lazy.spawn(SOUND + " up"), 
+        desc="Raise Volume"),
     # Volume Down: Lowers audio by 5%
-    Key([], "XF86AudioLowerVolume", lazy.spawn(os.path.expanduser("~/.config/qtile/sound.sh down")), desc="Lower Volume"),
-
+    Key([], "XF86AudioLowerVolume", lazy.spawn(SOUND + " down"), 
+        desc="Lower Volume"),
     # Audio Mute: Toggles system mute state on/off
-    Key([], "XF86AudioMute", lazy.spawn(os.path.expanduser("~/.config/qtile/sound.sh mute")), desc="Toggle Mute"),
-
+    Key([], "XF86AudioMute", lazy.spawn(SOUND + " mute"), 
+        desc="Toggle Mute"),
     # Microphone Mute: Toggles system input source on/off
-    Key([], "XF86AudioMicMute", lazy.spawn(os.path.expanduser("~/.config/qtile/sound.sh mic-mute")), desc="Toggle Microphone Mute"),
-
+    Key([], "XF86AudioMicMute", lazy.spawn(SOUND + " mic-mute"), 
+        desc="Toggle Microphone Mute"),
     # ===============================================================
     # BACKLIGHT / BRIGHTNESS CONTROL KEYS
     # ===============================================================
-    
     # Brightness Up: Increases backlight by 5%
-    Key([], "XF86MonBrightnessUp", lazy.spawn(os.path.expanduser("~/.config/qtile/brightness.sh up")), desc="Increase Screen Brightness"),
+    Key([], "XF86MonBrightnessUp", lazy.spawn(BRIGHT + " up"), 
+        desc="Increase Screen Brightness"),
+    # Brightness Down: Decreases backlight by 5% 
+    Key([], "XF86MonBrightnessDown", lazy.spawn(BRIGHT + " down"), 
+        desc="Decrease Screen Brightness"),
+    # =============================================================
+    # KEYBOARD BACKLIGHT CONTROLS
+    # =============================================================
+    # Lower Keyboard Backlight
+    Key([], "XF86KbdBrightnessDown", lazy.spawn(BRIGHT + " macdown"),
+        desc="Lower Keyboard Backlight"),
+    # Raise Keyboard Backlight
+    Key([], "XF86KbdBrightnessUp", lazy.spawn(BRIGHT + " macup"),
+        desc="Raise Keyboard Backlight"),
+    # =============================================================
+    # MEDIA PLAYBACK CONTROLS (PLAYERCTL)
+    # =============================================================
+    # Play/Pause
+    Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause"), 
+        desc="Play/Pause Media"),
+    # Next Track
+    Key([], "XF86AudioNext", lazy.spawn("playerctl next"), 
+        desc="Next Track"),
+    # Previous Track
+    Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), 
+        desc="Previous Track"),
+    # =============================================================
+    # MacBook Mid-2012 - Fn keys
+    # =============================================================
+    # XF86Eject (MacBook Mid-2012 eject button
+    Key([], "XF86Eject", lazy.spawn(POWER)),
+    # XF86LaunchA (MacBook Mid-2012) 
+    Key([], "XF86LaunchA", lazy.next_layout()),
+    # XF86LaunchB (MacBook Mid-2012)
+    Key([], "XF86LaunchB", lazy.spawn(ROFI_APPS)),
 
-    # Brightness Down: Decreases backlight by 5% (Automatically stops at 1% min)
-    Key([], "XF86MonBrightnessDown", lazy.spawn(os.path.expanduser("~/.config/qtile/brightness.sh down")), desc="Decrease Screen Brightness"),
+    # ============================================================
+    #  Microsoft Microsoft® Nano Transceiver v2.0
+    # ============================================================
+    #  - Above Trackpad
+    # ============================================================
+    # House Icon  
+    # - fn + f1 on SEMICO USB Keyboard
+    Key([], "XF86HomePage", lazy.spawn("firefox"), 
+        desc="Launch Firefox"),
+    # Media Player headphones 
+    # - fn + f4 on SEMICO USB Keyboard
+    Key([], "XF86Tools", lazy.spawn("vlc"), 
+        desc="Launch VLC"),
+    # Folder icon 
+    # - fn + f11 on SEMICO USB Keyboard
+    Key([], "XF86Explorer", lazy.spawn(FILES), 
+        desc="Launch File Manager"),
+    # ===========================================================
+    #  Fn keys on F keys
+    # ===========================================================
+    # f5/ Search icon 
+    # - fn + f3 on SEMICO USB Keyboard
+    Key([], "XF86Search", lazy.spawn("catfish"), 
+        desc="Cat Fish search tool"), 
+    # f6/Ubuntu Logo 
+    #Key([alt, mod], "F21", lazy.spawn( ), desc=""),
+    # f7/small squre over a big square
+    #Key(["control", mod], "F21", lazy.spawn()),
+    
+    # f8/Settings, gear on Microsoft Microsoft® Nano Transceiver v2.0 
+    Key([mod], "F21", lazy.spawn(SETTINGS), 
+        desc="XFCE4/LXQt Settings"),
+    # ==========================================================
+    # SEMICO USB Keyboard Consumer Control (from Dollarama)
+    # ==========================================================
+    # fn + f2 - mail
+    Key([], "XF86Mail", lazy.spawn("thunderbird")),
+    # fn + f12 calculator
+    #Key([], "XF86Calculator", lazy.spawn("galculator")),
 
-    # Projector / Display Key: Launches an interactive Rofi multi-display menu
-    # MSI Katana projector shortcut is just a <win>+p on one button
-    Key([mod], "p", lazy.spawn("arandr"), desc="Interactive Rofi Monitor Layout Switcher"),
+    # ===============================================================
+    # Compose Key, looks like a menu
+    # If Multi_key doesn't catch it, use Menu as your backup fallback
+    # - Try Multi_key 1st (the most standard X11 mapping for Compose)
+    #Key([], "Multi_key", lazy.spawn("your-command-here")),
+    #Key([], "Menu", lazy.spawn("your-command-here")),
+
+    #===============================================================
+    # Print Screen key to take a screenshot
+    #Key([], "Print", lazy.spawn("")),
+
+    # =============================================================
+    #  Pause/Break key to a custom command (e.g., locking your screen)
+    #Key([], "Pause", lazy.spawn("")),
 ]
 
 # ===================================================================
@@ -157,7 +301,6 @@ groups = [
         "8", 
         label=GROUP_NAMES["8"],
         matches=[Match(wm_class="firefox")],
-        layout="max"
     ),
     
     # Group 9: Code Development Workspace (Forces VS Code here)
@@ -165,7 +308,6 @@ groups = [
         "9", 
         label=GROUP_NAMES["9"],
         matches=[Match(wm_class="code")],
-        layout="columns"
     ),
 ]
 
@@ -177,13 +319,19 @@ groups.append(
     ScratchPad("scratchpad", [
         DropDown(
             "term",
-            f"kitty --class=scratchpad", # Forces a unique window class for the dropdown
+            # Forces a unique window class for the dropdown
+            f"kitty --class=scratchpad", 
             opacity=0.95,
-            height=0.6,                       # Spans 60% of screen height
-            width=0.8,                        # Spans 80% of screen width
-            x=0.1,                            # Centers it horizontally (10% margin left)
-            y=0.1,                            # Centers it vertically (10% margin top)
-            on_focus_lost_hide=True           # Automatically hides when you click away
+            # Spans 60% of screen height
+            height=0.6,                  
+            # Spans 80% of screen width
+            width=0.8,      
+            # Centers it horizontally (10% margin left)
+            x=0.1,                       
+            # Centers it vertically (10% margin top)
+            y=0.1,                       
+            # Automatically hides when you click away
+            on_focus_lost_hide=True      
         ),
 
 
@@ -195,32 +343,30 @@ for i in groups:
         keys.extend([
             Key([mod], i.name, lazy.group[i.name].toscreen(),
                 desc=f"Switch to group {i.name}"),
-            Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True),
+            Key([mod, "shift"], i.name, 
+                lazy.window.togroup(i.name, switch_group=True),
                 desc=f"Move focused window to group {i.name}"),
         ])
-
-layouts = [
-    layout.Columns(
-        border_focus="#ff5555",      # Blood Red border for the active window
-        border_normal="#282a36",     # Dark Steel border for inactive windows
-        border_width=5,
-        margin=10                     # Adds a clean gap between windows
-    ),
-    layout.Max(),
-]
 
 # ===================================================================
 # RED, WHITE & BLACK COLOR PALETTE
 # ===================================================================
 
 COLORS = {
-    "bg_dark":      "#000000", # Pure Black (Bar & Outer space)
-    "panel_dark":   "#121212", # Dark Charcoal / Matte Black (Bar Segments)
-    "panel_mid":    "#242424", # Medium Charcoal (Contrasting Segments)
-    "accent_red":   "#FF0033", # Vibrant Crimson / Neon Red (Highlights & Clock)
-    "border_red":   "#E60000", # Pure Red (Active Window Borders)
-    "text_white":   "#FFFFFF", # Crisp White (Primary text & icons)
-    "text_dim":     "#888888", # Dimmed Gray (Inactive workspace icons)
+    # Pure Black (Bar & Outer space)
+    "bg_dark":    "#000000", 
+    # Dark Charcoal / Matte Black (Bar Segments)
+    "panel_dark": "#121212", 
+    # Medium Charcoal (Contrasting Segments)
+    "panel_mid":    "#242424", 
+    # Vibrant Crimson / Neon Red (Highlights & Clock)
+    "accent_red":   "#FF0033", 
+    # Pure Red (Active Window Borders)
+    "border_red":   "#E60000", 
+    # Crisp White (Primary text & icons)
+    "text_white":   "#FFFFFF", 
+    # Dimmed Gray (Inactive workspace icons)
+    "text_dim":     "#888888", 
 }
 
 katana_slash = {
@@ -244,16 +390,73 @@ extension_defaults = widget_defaults.copy()
 # ===================================================================
 # LAYOUT BORDERS
 # ===================================================================
+# Shared border theme settings so every layout looks consistent
+layout_theme = {
+    "border_width": 2,
+    # Outer gaps around windows
+    "margin": 8,                         
+    # Active window border
+    "border_focus": COLORS["border_red"], 
+    # Inactive window border
+    "border_normal": COLORS["panel_dark"]
+}
 
 layouts = [
+    # 1. COLUMNS (Your main tiling driver
+    # - flexible left/right split)
     layout.Columns(
-        border_focus=COLORS["border_red"],     # Vivid Red for focused window
-        border_normal=COLORS["panel_mid"],     # Dark Charcoal for inactive windows
-        border_width=4,
-        margin=8                               # Clean gap between windows
+        **layout_theme,
+        border_focus_stack=COLORS["border_red"],
+        border_normal_stack=COLORS["panel_dark"],
+        num_columns=2,
+        insert_position=1
     ),
+
+    # 2. MONADTALL (Classic i3/XMonad layout
+    # - 1 large master on left, stack on right)
+    layout.MonadTall(
+        **layout_theme,
+        # Master window takes 55% of screen width
+        ratio=0.55,                      
+        new_client_position='after_current'
+    ),
+
+    # 3. MONADWIDE (Same as MonadTall, but split horizontally
+    # - great for ultra-wides)
+    layout.MonadWide(
+        **layout_theme,
+        # Master window takes 60% of screen height
+        ratio=0.60,                      
+    ),
+
+    # 4. BSPACE (Binary Space Partitioning
+    # - automatically splits active pane)
+    layout.Bsp(
+        **layout_theme,
+        # Keeps window sizes balanced automatically
+        fair=False,                      
+    ),
+
+    # 5. MATRIX (Grid-based layout
+    # - arranges windows evenly in a grid)
+    layout.Matrix(
+        **layout_theme,
+        # Start as a 2-column matrix grid
+        columns=2                        
+    ),
+
+    # 6. ZOOMY (Focus mode
+    # - active window is huge, background apps form a side strip)
+    layout.Zoomy(
+        **layout_theme,
+        # Width of the inactive window sidebar 
+        column_width=200                 
+    ),
+
+    # 7. MAX (Full screen workspace layout)
     layout.Max(),
 ]
+
 
 # ===================================================================
 # SCREEN CONFIGURATION
@@ -293,7 +496,7 @@ screens = [
 
                 # Network Monitor
                 widget.Net(
-                    format="󰀂  󰇚{down:6.2f} 󰕒{up:6.2f}",
+                    format="󰀂 󰇚{down:6.2f} 󰕒{up:6.2f}",
                     background=COLORS["accent_red"],
                     foreground=COLORS["text_white"],
                     **katana_slash
@@ -305,7 +508,7 @@ screens = [
                     background=COLORS["panel_dark"],
                     foreground=COLORS["text_white"],
                     mouse_callbacks={
-                        'Button1': lazy.spawn("kitty -T 'Floating Terminal' -e .config/qtile/sysinfo.sh") 
+                        'Button1': lazy.spawn(SYSINFO) 
                     },
                     **katana_slash
                 ),
@@ -326,7 +529,7 @@ screens = [
                     background=COLORS["panel_dark"],
                     foreground=COLORS["text_white"],
                     mouse_callbacks={
-                        'Button1': lazy.spawn("kitty -T 'Floating Terminal' -e htop"),
+                        'Button1': lazy.spawn(HTOP),
                        
                     },
                     **katana_slash
@@ -343,25 +546,48 @@ screens = [
                     },
                     **katana_slash
                 ),
-
+                widget.Battery(
+                    format="{char} {percent:2.0%}",
+                    charge_char="⚡",
+                    discharge_char="🔋",
+                    full_char="🔋",
+                    empty_char="🪫",
+                    unknown_char="🔌",
+    
+                    # Threshold warning colors
+                    # Trigger low alert at 20%
+                    low_percentage=0.2,                  
+                    # Color when battery is low
+                    low_foreground=COLORS["panel_dark"],  
+                    # Normal text color
+                    foreground=COLORS["text_white"],     
+                    # Update frequency (in seconds)
+                    update_interval=10,
+                    # Apply your bar's background/separator style
+                    **katana_slash  
+                ),
                 # Clock Block (Bold Accent)
                 widget.Clock(
-                    format="%Y-%m-%d %I:%M %p",
-                    background=COLORS["panel_dark"],
+                    format="%Y-%m-%d %H:%M",
+                    background=COLORS["accent_red"],
                     foreground=COLORS["text_white"],
                     padding=10,
+                    **katana_slash
                 ),
                 widget.Chord(
                     name_transform=lambda name: name.upper(),
                 ),
-                widget.Systray(padding=5),
+                widget.Systray(
+                    padding=5,
+                    **katana_slash
+                ),
                 widget.TextBox(
-                    text="󰐥 Power",
+                    text="󰐥",
                     background=COLORS["accent_red"],
                     foreground=COLORS["text_white"],
                     padding=10,
                     mouse_callbacks={
-                        'Button1': lazy.spawn(os.path.expanduser("~/.config/qtile/powermenu.sh"))
+                        'Button1': lazy.spawn(POWER)
                     }
                 ),
             ],
@@ -414,15 +640,15 @@ wl_xcursor_theme = None
 wl_xcursor_size = 24
 wmname = "LG3D"
 
-# =============================================================================
+# =================================================================
 # STARTUP HOOKS
-# =============================================================================
+# =================================================================
 
 @hook.subscribe.startup_once
 def autostart():
-    subprocess.Popen(['nm-applet'])
-    initial_wp = os.path.expanduser("~/.config/qtile/wp/bg.png")
-    home = os.path.expanduser('~/.config/qtile/autostart.sh')
+    #subprocess.Popen(['nm-applet'])
+    #initial_wp = os.path.expanduser("~/.config/qtile/wp/bg.png")
+    home = os.path.expanduser('~/.config/qtile/bin/autostart.sh')
     subprocess.Popen([home])
-    if os.path.exists(initial_wp):
-        subprocess.Popen(["feh", "--bg-fill", initial_wp])
+    #if os.path.exists(initial_wp):
+    #    subprocess.Popen(["feh", "--bg-fill", initial_wp])

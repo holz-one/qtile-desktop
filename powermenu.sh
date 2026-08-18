@@ -3,7 +3,7 @@
 # Options with icons
 options="󰌾 Lock\n󰍃 Logout\n󰑐 Reboot\n󰐥 Shutdown"
 
-chosen=$(echo -e "$options" | rofi -dmenu -i -p "System" -theme ~/.config/qtile/power.rasi)
+chosen=$(echo -e "$options" | rofi -dmenu -i -p "System" -theme ~/.config/qtile/powermenu.rasi)
 
 case "$chosen" in
     *Lock*)

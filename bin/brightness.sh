@@ -23,4 +23,15 @@ case "$1" in
         BRI=$(get_brightness_pct)
         notify-send $NOTIF_TAG "Brightness" "$BRI%" -i display-brightness -h int:value:"$BRI"
         ;;
+
+    macup)
+	brightnessctl --device='*kbd_backlight*' set 5%+
+	#brightnessctl --device='smc::kbd_backlight' set 5%+
+	#brightnessctl --device='apple::kbd_backlight' set 5%+
+	;;
+    macdown)
+	brightnessctl --device='*kbd_backlight*' set 5%-
+	#brightnessctl --device='smc::kbd_backlight' set 5%-
+	#brightnessctl --device='apple::kbd_backlight' set 5%-
+	;;
 esac

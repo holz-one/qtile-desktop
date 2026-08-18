@@ -1,0 +1,141 @@
+/**
+ * Author: A. K. Holz
+ * Github: @holz-one
+ * 
+ * Rofi Theme File (Red, White & Black)
+ * Rofi Version: 1.7.3
+ **/
+
+/*****----- Configuration -----*****/
+configuration {
+    modi:                       "dmenu";
+    show-icons:                 false;
+}
+
+/*****----- Global Properties (Red, White & Black) -----*****/
+* {
+    font:                       "JetBrains Mono Nerd Font 10";
+    background:                 #000000;
+    background-alt:             #121212;
+    background-mid:             #242424;
+    foreground:                 #FFFFFF;
+    selected:                   #FF0033;
+    active:                     #FF0033;
+    urgent:                     #E60000;
+}
+
+/*****----- Main Window (Centered Modal) -----*****/
+window {
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      500px;
+
+    enabled:                    true;
+    border:                     2px solid;
+    border-color:               @selected;
+    border-radius:              8px;
+    cursor:                     "default";
+    background-color:           @background;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                    true;
+    spacing:                    0px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "inputbar", "listbox" ];
+}
+
+listbox {
+    spacing:                    10px;
+    padding:                    15px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "listview" ];
+}
+
+/*****----- Inputbar / Header Image -----*****/
+inputbar {
+    enabled:                    true;
+    spacing:                    10px;
+    /* Pushes input bar down near the bottom of the banner image */
+    padding:                    250px 20px 20px;
+    background-color:           transparent;
+    background-image:           url("~/.config/qtile/wp/scanner-avm.jpeg", width);
+    text-color:                 @foreground;
+    orientation:                horizontal;
+    children:                   [ "prompt", "entry" ];
+}
+
+/* Explicitly style the -p "Malware Scan" text */
+prompt {
+    enabled:                    true;
+    padding:                    12px 16px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @selected;
+}
+
+/* Style the search/input box next to the prompt */
+entry {
+    enabled:                    false;
+    expand:                     true;
+    padding:                    12px 16px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+    cursor:                     text;
+    placeholder:                "Filter options...";
+    placeholder-color:          #888888;
+}
+
+/*****----- Listview -----*****/
+listview {
+    enabled:                    true;
+    columns:                    1;
+    lines:                      6;
+    cycle:                      true;
+    dynamic:                    true;
+    scrollbar:                  false;
+    layout:                     vertical;
+    reverse:                    false;
+    fixed-height:               true;
+    fixed-columns:              true;
+    
+    spacing:                    8px;
+    background-color:           transparent;
+    text-color:                 @foreground;
+    cursor:                     "default";
+}
+
+/*****----- Elements -----*****/
+element {
+    enabled:                    true;
+    spacing:                    10px;
+    padding:                    10px 14px;
+    border-radius:              4px;
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+    cursor:                     pointer;
+}
+
+element normal.normal {
+    background-color:           @background-alt;
+    text-color:                 @foreground;
+}
+
+element selected.normal {
+    background-color:           @selected;
+    text-color:                 @foreground;
+}
+
+element-text {
+    background-color:           transparent;
+    text-color:                 inherit;
+    cursor:                     inherit;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+}
