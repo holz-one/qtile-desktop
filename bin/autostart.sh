@@ -11,4 +11,4 @@ systemctl --user restart pipewire pipewire-pilse wireplumber
 # pipewire-pulse &
 # wireplumber &
 
-feh --bg-fill ~/.config/qtile/wp/bg.png &
+feh --bg-fill ~/.config/qtile/wp/bg.jpeg &

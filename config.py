@@ -15,13 +15,7 @@ from qtile_extras.widget.decorations import PowerLineDecoration
 from libqtile.config import ScratchPad, DropDown
 ##
 
-floating_layout = layout.Floating(
-    float_rules=[
-        *layout.Floating.default_float_rules,
-        # Float any window given the class 'scanner-float'
-        Match(wm_class="scanner-float"),
-    ]
-)
+
 
 @hook.subscribe.client_name_updated
 def force_floating_by_title(window):
@@ -280,10 +274,7 @@ GROUP_NAMES = {
     "3": "3",
     "4": "4",
     "5": "5",
-    "6": "6",
-    "7": "7",
-    "8": "🌐",
-    "9": "🥷",
+    "6": "⚡", "7": "🔥", "8": "🌐", "9": "🥷",
 }
 
 groups = [
@@ -292,25 +283,20 @@ groups = [
     Group("2", label=GROUP_NAMES["2"]),
     Group("3", label=GROUP_NAMES["3"]),
     Group("4", label=GROUP_NAMES["4"]),
-    #Group("5", label=GROUP_NAMES["5"]),
-    #Group("6", label=GROUP_NAMES["6"]),
-    #Group("7", label=GROUP_NAMES["7"]),
-    
+    Group("5", label=GROUP_NAMES["5"]),
+    Group("6", label=GROUP_NAMES["6"]),
+    Group("7", label=GROUP_NAMES["7"]),
     # Group 8: Web Browser Workspace (Forces Firefox here)
     Group(
-        "8", 
-        label=GROUP_NAMES["8"],
+        "8", label=GROUP_NAMES["8"],
         matches=[Match(wm_class="firefox")],
     ),
-    
     # Group 9: Code Development Workspace (Forces VS Code here)
     Group(
-        "9", 
-        label=GROUP_NAMES["9"],
+        "9", label=GROUP_NAMES["9"],
         matches=[Match(wm_class="code")],
     ),
 ]
-
 
 # ===================================================================
 # ADDING THE KITTY SCRATCHPAD
@@ -333,8 +319,6 @@ groups.append(
             # Automatically hides when you click away
             on_focus_lost_hide=True      
         ),
-
-
     ])
 )
 #########################################
@@ -372,16 +356,14 @@ COLORS = {
 katana_slash = {
     "decorations": [
         PowerLineDecoration(
-            path="forward_slash", 
-            size=11,             
-            shift=0,
+            path="forward_slash", size=11, shift=0,
         )
     ]
 }
 
 widget_defaults = dict(
     font="JetBrains Mono, sans-serif",
-    fontsize=13,
+    fontsize=11,
     padding=6,
     foreground=COLORS["text_white"],
 )
@@ -612,8 +594,10 @@ floating_layout = layout.Floating(
         Match(wm_class="ssh-askpass"),  
         Match(title="branchdialog"),  
         Match(title="pinentry"),  
+        Match(wm_class="scanner-float"),
     ]
 )
+
 # =============================================================================
 # MOUSE & WINDOW RULES,
 # =============================================================================
@@ -646,9 +630,5 @@ wmname = "LG3D"
 
 @hook.subscribe.startup_once
 def autostart():
-    #subprocess.Popen(['nm-applet'])
-    #initial_wp = os.path.expanduser("~/.config/qtile/wp/bg.png")
     home = os.path.expanduser('~/.config/qtile/bin/autostart.sh')
     subprocess.Popen([home])
-    #if os.path.exists(initial_wp):
-    #    subprocess.Popen(["feh", "--bg-fill", initial_wp])

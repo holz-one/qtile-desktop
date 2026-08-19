@@ -1,40 +1,31 @@
-# Qtile Desktop Configuration
+# qtile-desktop
+![Qtile-Desktop](./wp/bg.jpeg)
 
-A modular, portable Qtile desktop setup configured for multi-distro compatibility across Lubuntu, Xubuntu, Kali Linux, and DietPi (ARM64 / Orange Pi 5 Plus). 
 
-It features custom Rofi control menus, a Game Mode background service toggle, dynamic sound and brightness notifications, and automated permission setup scripts.
-
-> ⚠️ **Work in Progress:** This setup is actively being developed. Scripts, keybindings, and configurations will be added and updated as needed.
+My personal Qtile window manager configuration. This repository contains my complete desktop environment setup, optimized for efficiency with custom scripting and modular configurations.
 
 ---
 
-## 🛠️ Features
+## Recent Updates
 
-* **Rofi Service Manager (`devsrv.sh` & `devsrv.rasi`):** Toggle developer and background services (Docker, PostgreSQL, Redis, Ollama, etc.) with a dedicated Game Mode to free up RAM and CPU.
-* **Auto-Sudoers Setup (`make_sudoer.sh`):** Detects installed services on the target machine and generates passwordless `systemctl` permissions safely using `visudo`.
-* **OSD Audio & Brightness Controls (`sound.sh` & `brightness.sh`):** Wrapper scripts for `wpctl` and `brightnessctl` featuring progress bars and stack-tagging for clean notifications.
-* **Custom Rofi Launchers:** Styled theme files for application launching, power management, developer services, and SSH sessions (`appimage.rasi`, `apps.rasi`, `devsrv.rasi`, `power.rasi`, `ssh.rasi`).
-* **Cross-Distro Support:** Configured to run across Ubuntu/Debian bases, Kali Linux, and lightweight LXQt/DietPi nodes.
+* **Keyboard Function Keys:** Updated media, audio, and backlight function keys to interact with hardware scripts and system utilities.
+* **Script Restructuring:** Moved all non-Rofi system and utility shell scripts into `./bin/` to clean up the root directory.
+* **Expanded Rofi Scripts:** Added several new Rofi menu scripts directly in the root directory alongside `.rasi` theme files.
+* **Rofi Keybindings:** Mapped Rofi scripts directly to Qtile shortcuts for quick access.
 
 ---
 
-## 📂 Repository Structure
+## Directory Overview
 
 ```text
-~/.config/qtile/
-├── config.py         # Main Qtile configuration file
-├── autostart.sh      # Startup commands and background daemons
-├── make_sudoer.sh    # Sudoers generator for service toggles
-├── devsrv.sh         # Rofi Service Manager / Game Mode script
-├── devsrv.rasi       # Service Manager Rofi theme
-├── sound.sh          # PipeWire volume notification handler
-├── brightness.sh     # Backlight notification handler
-├── appimage.sh       # AppImage launcher wrapper
-├── powermenu.sh      # System shutdown/reboot menu
-├── sysinfo.sh        # Quick system information utility
-├── kali-deps.sh      # Dependency setup script
-├── *.rasi            # Rofi layout and color theme files
-└── wp/               # Wallpapers and menu header image assets
+├── config.py    # Core Qtile configuration & keybindings
+├── bin/         # Non-rofi executable scripts 
+├── wp/          # AI generated images used in Rofi launchers
+├── system-conf/ # Configs to install into /etc 
+├── *.sh         # Rofi menu scripts
+├── *.rasi       # Rofi theme files
+├── README.md    # Repository documentation
+└── LICENSE      # MIT Licence 
 ```
 
 ## 🚀 Installation & Setup
@@ -55,34 +46,85 @@ git clone https://github.com/holz-one/qtile-desktop.git ~/.config/qtile
 
 ### 2. Make Scripts Executable & Install Dependencies
 
-   Navigate into your directory, make all shell scripts executable, and run the dependency installer:
+Navigate into your directory, make all shell scripts executable, and run the dependency installer:
 
 ```bash
 cd ~/.config/qtile
 chmod +x *.sh
 ./install-deps.sh
 ```
+The script will also install most dependancies of programs I use and it will also configure git, zsh, vu.  
+I intend to add more to this install script. 
+Ollama still needs to be added, maybe llama.cpp. 
+
+I also plan to make a tool to replace snap with flatpak, 
+my current system has snap removed completlety.
+
 
 ### 3. Generate Service Permissions
 
-   Allow devsrv.sh to start and stop services without password prompts:
+Allow devsrv.sh to start and stop services without password prompts.
+Other apps will also be added as needed for other commands like freashclam, rkhunter, gparted, apt update/upgrade, ss, 
+
 
 ```bash
 sudo ./make_sudoer.sh
 ```
 
-### ⌨️ Useful Keybindings
+### 4. Useful Keybindings
+
+These are all key bindings from all my avalible keyboards I have from:
+
+- MacBook Mid-2012
+- MSI Katana
+- SEMICO USB Keyboard ($5 Dollarama Specal)
+- Microsoft Nano Transceiver v2.0
+
+The keys I haven't configured yet are commented out in the `config.py`
 
 | Keybinding | Action | Description |
 | :--- | :--- | :--- |
-| `XF86AudioRaiseVolume` | `./sound.sh up` | Raises volume (+5%) with OSD |
-| `XF86AudioLowerVolume` | `./sound.sh down` | Lowers volume (-5%) with OSD |
-| `XF86AudioMute` | `./sound.sh mute` | Toggles audio mute |
-| `XF86AudioMicMute` | `./sound.sh mic-mute` | Toggles microphone mute |
-| `XF86MonBrightnessUp` | `./brightness.sh up` | Increases backlight (+5%) |
-| `XF86MonBrightnessDown` | `./brightness.sh down` | Decreases backlight (-5%) |
+| **XF86AudioRaiseVolume** | `./bin/volume.sh up` | Raise audio volume |
+| **XF86AudioLowerVolume** | `./bin/volume.sh down` | Lower audio volume |
+| **XF86AudioMute** | `./bin/volume.sh mute` | Toggle audio mute |
+| **XF86AudioMicMute** | `./bin/sound.sh mic-mute` | Toggles microphone mute |
+| **XF86MonBrightnessUp** | `./bin/brightness.sh up` | Increases backlight (+5%) |
+| **XF86MonBrightnessDown** | `./bin/brightness.sh down` | Decreases backlight (-5%) |
+| **XF86KbdBrightnessUp** | `./bin/brightness.sh macup` | Increases backlight (+5%) |
+| **XF86KbdBrightnessDown** | `./bin/brightness.sh macdown` | Decreases backlight (-5%) |
+| **XF86AudioPlay** | `playerctl play-pause` | Play / Pause active media |
+| **XF86AudioNext** | `playerctl next` | Skip to next track |
+| **XF86AudioPrev** | `playerctl previous` | Skip to previous track |
+| **XF86Eject** | `./powermenu.sh` | Power Menu |
+| **XF86LaunchA** | Next Layout | Switch Qtile Layout |
+| **XF86LaunchB** | `./rofi_apps.sh` | Launcher of configured Rofi Scripts |
+| **XF86HomePage** | `firefox` | Firefox Web Browser |
+| **XF86Tools** | `vlc` | VLC Media Player |
+| **XF86Explorer** | `./bin/files.sh` | File Browser |
+| **XF86Search** | `catfish` | Cat Fish Search tool |
+| **XF86Mail** | `thunderbird` | Thunderbird Mail Client |
 
-More will eventually be added from my other systems.
+More will eventually be added from my other systems as they're configured.
+
+
+#### Other Keyboard Script Keybindings
+
+Below are the key combinations configured in `config.py` to launch Rofi scripts and other Apps:
+
+| Keybinding | Target Script / Action | Description |
+| :--- | :--- | :--- |
+| `Super + D` | `rofi -show drun` | Rofi Application launcher |
+| `Super + Shift + D` | `./docker.sh` | Docker Containers |
+| `Super + Control + D` | `./devsrv.sh` | Services and Game Mode |
+| `Super + Alt + D` | `./appimage.sh` | AppImage launcher |
+| `Super + S` | `./ssh.sh` | Rofi SSH |
+| `Super + Shift + S` | `./scanner-avm.sh` | ClamAV/RKHunter launcher |
+| `Super + O` | `./ollama.sh` | Rofi Ollama |
+| `Super + P` | `arandr` | Display Config |
+| `Super + Enter` | `kitty` | kitty terminal |
+| `Super + F21` | `./bin/settings.sh` | launch settings app |
+
+
 ## Images
 
 All the images in ./wp have been generated with Google Gemini for rofi menus and wallpaper.  
